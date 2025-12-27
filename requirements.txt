@@ -1,0 +1,9 @@
+google-generativeai
+langchain-google-genai
+langchain
+python-dotenv
+Pillow
+grpcio
+google-api-core
+tenacity
+httpx
