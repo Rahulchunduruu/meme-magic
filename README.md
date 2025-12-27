@@ -28,20 +28,6 @@ GEMINI_API_KEY3=backup_key_3
 
 Get your API key from: https://console.cloud.google.com/apis/credentials
 
-### 3. Project Structure
-```
-intellipaat_genai/
-├── chatbot/
-│   ├── agent2.py            # Gemini image generation agent
-│   ├── meme_generator.py    # Main meme generation pipeline
-│   ├── vector_conversion.py # Meme search engine
-│   ├── config.py            # Configuration loader
-│   ├── requirements.txt     # Dependencies
-│   └── README.md            # This file
-├── memes database/          # Meme image storage
-└── .env                     # API keys (not in repo)
-```
-
 ## Usage
 
 ### Basic Usage
