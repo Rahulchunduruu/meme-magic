@@ -12,7 +12,7 @@ class geminiimgagent:
         img2 = PIL.Image.open(imagepath2)
         
         config = types.GenerateContentConfig(
-            system_instruction="You are an memer. Add a more humorous/Dark  meme caption to this image. Do not change the background"
+            system_instruction="You are an memer. Add a more humorous meme caption to this image. Do not change the background"
         )
         
         response = self.client.models.generate_content(
