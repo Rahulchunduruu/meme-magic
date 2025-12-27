@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 
 # Load .env from parent directory
-env_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+#env_path = os.path.join(os.path.dirname(__file__), '..', '.env')
 load_dotenv()
 
 class Config:    
