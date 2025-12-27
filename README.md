@@ -1,14 +1,15 @@
-# Meme Generator with Gemini AI
+# Meme Generator Chatbot with Gemini AI
 
-An intelligent meme generator that uses Google's Gemini AI to analyze user queries, find matching memes, and generate new memes with custom captions.
+A Streamlit-based chatbot that generates memes using Google's Gemini AI. It analyzes user queries, finds matching memes, and creates new memes with custom captions.
 
 ## Features
 
-- **Query Understanding**: Uses Gemini LLM to understand user input and generate meme descriptions
-- **Meme Search**: Finds best matching memes from database using vector similarity
-- **Meme Generation**: Generates new memes with AI-powered captions using Gemini vision models
-- **Image Processing**: Adds text overlays with Impact font styling
-- **Error Handling**: Comprehensive exception handling for API errors and edge cases
+- **Streamlit UI**: Interactive chat interface for meme generation
+- **Query Understanding**: Gemini LLM generates meme descriptions from user input
+- **Meme Search**: Vector-based search to find matching memes
+- **Meme Generation**: AI-powered meme creation with text overlays
+- **Error Handling**: Robust exception handling for API and file errors
+- **Class-Based Architecture**: Clean OOP design with `Chatbot` class
 
 ## Setup
 
@@ -18,54 +19,75 @@ pip install -r requirements.txt
 ```
 
 ### 2. Configure API Keys
-Create a `.env` file in the project root:
+Create a `.env` file:
 ```
 GEMINI_API_KEY=your_api_key_here
-GEMINI_API_KEY1=backup_key_1
-GEMINI_API_KEY2=backup_key_2
-GEMINI_API_KEY3=backup_key_3
 ```
 
 Get your API key from: https://console.cloud.google.com/apis/credentials
 
 ## Usage
 
-### Basic Usage
-```python
-from meme_generator import geminiAgent
+### Run Streamlit App
+```bash
+streamlit run app.py
+```
 
+Then type your meme idea in the chat input.
+
+### Run from Terminal (Script Mode)
+```bash
+python meme_generator.py
+```
+
+Edit the `userinput` variable in the `__main__` section to change the meme prompt:
+```python
+userinput = "your meme idea here"
 agent = geminiAgent()
-userinput = 'i dont like to work on weekend'
 response = agent.generate_response(userinput)
-print(f"Meme description: {response}")
+print(f"Meme caption: {response}")
+
+engine = MemeSearchEngine()
+results = engine.find_best_meme(response)
+images_path = [result['image'] for result in results[:2]]
+
+agent.generate_image(userinput, images_path[0], images_path[1])
 ```
 
-### Generate Meme with Images
-```python
-agent.generate_image(userinput, image_path1, image_path2)
-```
+Generated meme will be saved as `transformed_output.png`.
+
+## Architecture
+
+**Chatbot Class** (`app.py`):
+- `image_generation()`: Orchestrates meme generation pipeline
+- `show_image()`: Displays generated meme with file validation
+- `render_messages()`: Renders chat history
+- `run()`: Main app loop
+
+**geminiAgent Class** (`meme_generator.py`):
+- `generate_response()`: Creates meme caption from user input
+- `generate_image()`: Generates meme image with text overlay
+
+**geminiimgagent Class** (`agent2.py`):
+- `generate_content()`: Calls Gemini vision API to create meme
+
+**MemeSearchEngine Class** (`vector_conversion.py`):
+- `find_best_meme()`: Finds matching memes using vector similarity
 
 ## Error Handling
 
-The application handles the following exceptions:
+- **Token Limit**: Prompts are optimized to stay within 77 token limit
+- **File Not Found**: Validates image paths before display
+- **API Quota**: Handles ResourceExhausted exceptions
+- **Missing Data**: Checks for valid image paths and search results
 
-- **ResourceExhausted**: API quota exceeded - use backup API keys or wait
-- **GoogleAPIError**: General API errors with detailed messages
-- **Missing Data**: Validates image paths and meme search results
-- **Network Errors**: Catches connection issues gracefully
+## Generated Files
 
-All errors are logged with user-friendly messages.
-
-## Files
-
-- **agent2.py**: `geminiimgagent` class for generating memes with Gemini
-- **meme_generator.py**: `geminiAgent` class for understanding queries and orchestrating meme generation
-- **vector_conversion.py**: `MemeSearchEngine` for finding similar memes
-- **config.py**: Configuration loader for API keys
+- `transformed_output.png`: Generated meme image
+- `.gitignore`: Excludes cache, venv, and generated files
 
 ## Notes
 
-- Suppress warnings: `warnings.filterwarnings('ignore')`
-- Free tier has rate limits - use backup API keys if quota exceeded
 - Generated memes saved as `transformed_output.png`
-- Check console output for error messages and status updates
+- Chat history stored in Streamlit session state
+- Check console for error messages and status updates

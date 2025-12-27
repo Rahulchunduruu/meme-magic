@@ -21,12 +21,16 @@ class geminiAgent:
     def generate_response(self, userinput: str) -> str:
         'generate response using Gemini LLM'
         try:
-            prompt = f"""Analyze the intent behind: '{userinput}'. 
-            Generate a witty, relatable meme description under 15 words. 
-            Provide the text only, no intro or outro."""
+            #prompt = f"Meme caption for: {userinput}"
+            prompt = f"""Strictly limit your entire response to 15 words or fewer. 
+                       Generate a meme caption for the given text. 
+                       Do not include any introductory text or fluff. 
+                       meme caption for : {userinput}"
+                       """
             
             response = self.gemini_llm.invoke([HumanMessage(content=prompt)])
-            return response.content
+            #text = response.content.strip().split('\n')[0]
+            return response.content.strip()
         except ResourceExhausted:
             print(" API quota exceeded. Please try again later or use a different API key.")
             return None
@@ -45,12 +49,11 @@ class geminiAgent:
 
             prompt = f"""Take this provided image and transform it into a standard internet meme by adding userinput overlay.
                         Text content :{userinput}
-                        1.Based provided images img1 img2 pick the best images form it which is prefectly suits form the {userinput} and don't overlay one image on other image
+                        1.Based provided images {imagepath1}{imagepath2} pick the best one images form it which is prefectly suits form the {userinput} and don't overlay one image on other image
                         2.understand the image and change the {userinput} accordingly but not change the orginal meaning of the Text
                         3.Overlay the text onto the image using the classic 'Impact' font style—bold, all-caps, white letters with a thick black outline.
                         4.Placement: Position the text as a [Top/Bottom/Split] caption to maximize humor and visibility without covering the main subject's face
                         5.Layout: If the text is long, split it into a setup at the top and a punchline at the bottom.
-                        6.Output:Do not change the original image's resolution or core content
                         """
             img = geminiimgagent()
             img.generate_content(userinput, imagepath1, imagepath2)
@@ -69,7 +72,7 @@ if __name__ == "__main__":
         response = agent.generate_response(userinput)
         if not response:
             print("Failed to generate meme description")
-            rep()
+            exit()
             
         print(f"gemini Response: {response}")
         
