@@ -97,7 +97,7 @@ class MemeSearchEngine:
         
         query_vector = self.text_to_vector(clr_text)
         scores, indices = self.index.search(query_vector.reshape(1, -1), top_k)
-        
+        #print(scores, indices)
         results = []
         for i, score in zip(indices[0], scores[0]):
             results.append({
@@ -109,8 +109,11 @@ class MemeSearchEngine:
 
 if __name__ == "__main__":
     engine = MemeSearchEngine()
-    engine.build_index()
+    if not os.path.exists("meme_index.faiss") and not os.path.exists("meme_paths.pkl"):
+        engine.build_index()
+        print("Index built and saved.")
     
+    print("searching started in the data base")
     query = "when your code works but you don't know why"
     results = engine.find_best_meme(query)
     print(results)
