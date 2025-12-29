@@ -82,5 +82,5 @@ class Chatbot:
 
 if __name__ == "__main__":
     chatbot = Chatbot()
-    user_input = st.chat_input("Type your message...")
+    user_input = st.chat_input("what's on your mind?")
     chatbot.run(user_input)
