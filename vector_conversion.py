@@ -12,7 +12,8 @@ class MemeSearchEngine:
     """A class to search memes using CLIP embeddings and FAISS indexing."""
     
     def __init__(self, meme_dir="memes database/", index_file="meme_index.faiss", paths_file="meme_paths.pkl"):
-        """Initialize the MemeSearchEngine with model and configuration.
+        """Initialize the MemeSearchEngine with model and configuration.ls
+        
         
         Args:
             meme_dir: Directory containing meme images
@@ -68,9 +69,12 @@ class MemeSearchEngine:
         for file in os.listdir(self.meme_dir):
             if file.endswith((".jpg", ".png", ".jpeg")):
                 path = os.path.join(self.meme_dir, file)
-                vector = self.image_to_vector(path)
-                self.index.add(vector.reshape(1, -1))
-                self.image_paths.append(path)
+                if os.path.exists(path):
+                    vector = self.image_to_vector(path)
+                    self.index.add(vector.reshape(1, -1))
+                    self.image_paths.append(path)
+                else:
+                    print("Skipping missing file:", path)
         
         faiss.write_index(self.index, self.index_file)
         with open(self.paths_file, "wb") as f:
