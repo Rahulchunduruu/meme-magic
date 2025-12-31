@@ -4,6 +4,7 @@ import os
 import pickle
 from PIL import Image
 from transformers import CLIPProcessor, CLIPModel
+from datetime import datetime
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -69,16 +70,21 @@ class MemeSearchEngine:
         for file in os.listdir(self.meme_dir):
             if file.endswith((".jpg", ".png", ".jpeg")):
                 path = os.path.join(self.meme_dir, file)
-                if os.path.exists(path):
-                    vector = self.image_to_vector(path)
-                    self.index.add(vector.reshape(1, -1))
-                    self.image_paths.append(path)
-                else:
-                    print("Skipping missing file:", path)
+                try:
+                    if os.path.exists(path):
+                        vector = self.image_to_vector(path)
+                        self.index.add(vector.reshape(1, -1))
+                        self.image_paths.append(path)
+                except (FileNotFoundError, OSError) as e:
+                    print(f"Skipping file (too long or inaccessible): {file[:50]}...")
         
         faiss.write_index(self.index, self.index_file)
         with open(self.paths_file, "wb") as f:
             pickle.dump(self.image_paths, f)
+
+
+
+
 
     def load_index(self):
         """Load pre-built FAISS index and image paths from disk."""
